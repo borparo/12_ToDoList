@@ -65,7 +65,7 @@ QMenuBar::item:pressed, QMenu::item:pressed {
 
 Task {
     background-color: #238754;
-    border-radius: 4px;
+    border-radius: 10px;
     border-style: inset;
     font-family: "Century Gothic";
     font-size:12pt;
@@ -96,7 +96,7 @@ QPushButton#delete-task {
     background-color: #206734;
     border: 2px;
     border-style: solid;
-    border-radius: 2px;
+    border-radius: 6px;
     border-color:#116030;
     color: #d3d3d3;
     font-size: 8pt;
@@ -106,7 +106,7 @@ QPushButton#delete-task:hover {
     background-color: #317754;
     border: 2px;
     border-style: solid;
-    border-radius: 2px;
+    border-radius: 6px;
     border-color:#116030;
     color: #d3d3d3;
     font-size: 8pt;
@@ -116,7 +116,7 @@ QPushButton#delete-task:pressed{
     background-color: #114424;
     border: 2px;
     border-style: solid;
-    border-radius: 2px;
+    border-radius: 6px;
     border-color:#116030;
     color: #d3d3d3;
     font-size: 8pt;

@@ -1,16 +1,17 @@
 from PySide2.QtWidgets import QFrame, QHBoxLayout, QPushButton, QCheckBox, QLineEdit
+import random
 
 
 class Task(QFrame):
     """
     The Task class inherits QFrame as a container to be populated with other widgets
     required for the UI display.
-    _line_edit: acts as a label displaying by default "Task + Task.id"
+    _line_edit: acts as a label displaying by default "Task + Task.current_id"
     _check_box: toggles the Task state for done/undone.
     _del_button: deletes the task widget
     _id: class variable, incremented with each created instance.
     """
-    _id = 0
+    _id = '000'
 
     def __init__(self, label="Task", is_done=False):
         QFrame.__init__(self)
@@ -27,7 +28,7 @@ class Task(QFrame):
         self._del_button.setFixedSize(55, 25)
 
         self._task_id = Task._id
-        Task._id += 1
+        Task._id = self.increase_id(Task._id)
 
         self._task_layout = QHBoxLayout()
         self._task_layout.addWidget(self._line_edit)
@@ -38,6 +39,15 @@ class Task(QFrame):
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
         self.setFixedHeight(45)
         self.setContentsMargins(2, 2, 2, 2)
+
+    def increase_id(self, current_id: str) -> str:
+        """
+        Returns the current_id increased by one with padding zeroes up to 3 digits as a string.
+        :param current_id: the id to increase.
+        :return: increased_id as a string after rising current_id by 1.
+        """
+        increased_id = str(int(current_id) + 1).zfill(3)
+        return increased_id
 
     def __str__(self):
         return f"[{self.__class__.__name__}_label: {self.label} | ID: {self.id} | Done: {self.done}]"

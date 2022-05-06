@@ -229,7 +229,7 @@ class Todo(QMainWindow):
         try:
             with open("tasks.json", "w+", encoding="utf8") as file_write:
                 for task in self._tasks:
-                    task_info = {"id": task.id, "label": task.label, "done": task.done}
+                    task_info = {"current_id": task.id, "label": task.label, "done": task.done}
                     my_tasks["tasks"].append(task_info)
                     print("writing task: ", task.label)
                 json.dump(my_tasks, file_write, indent=4)
@@ -237,6 +237,12 @@ class Todo(QMainWindow):
             print("file doesn't exists.")
 
     def open_file(self):
+        # clear the tasks list ui if we reopen the json tasks file.
+        if self._tasks != '':
+            tasks = self._central_page.findChildren(Task)
+            for task in tasks:
+                task.deleteLater()
+            self._tasks.clear()
         with open("tasks.json", "r") as file_read:
             my_tasks = json.load(file_read)
 
