@@ -153,7 +153,7 @@ class Todo(QMainWindow):
             answer = del_msg.exec_()
             if answer == del_msg.Yes:
                 task_to_delete.setParent(None)
-                self._tasks = [task for task in self._tasks if not task.unique_id == task_to_delete.unique_id]
+                self._tasks = [task for task in self._tasks if not task.id == task_to_delete.id]
                 self.statusBar().showMessage(f"{task_to_delete.label} deleted!", 1500)
 
     def _task_is_done(self, checked: bool):
@@ -242,12 +242,12 @@ class Todo(QMainWindow):
 
             for task in my_tasks["tasks"]:
                 label = task["label"]
-                id = task["id"]
                 done = task["done"]
-                print(task)
 
-                new_task = Task(label, id, done)
+                new_task = Task(label, done)
+                print(new_task.id)
 
+                # change task style if done.
                 if done:
                     new_task_label = new_task.findChild(QLineEdit, "task-label")
                     self.strikeout_task_label(new_task_label, new_task)
