@@ -1,5 +1,4 @@
 from PySide2.QtWidgets import QFrame, QHBoxLayout, QPushButton, QCheckBox, QLineEdit
-import random
 
 
 class Task(QFrame):
