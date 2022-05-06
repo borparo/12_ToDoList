@@ -21,12 +21,12 @@ MENUS = [
     "&Task",
     "&Project",
     "&Help"
-]
+    ]
 
 
 class Todo(QMainWindow):
     def __init__(self):
-        QMainWindow.__init__(self, parent=None)
+        super().__init__()
 
         self.setWindowTitle("TODO")
         self.setFixedWidth(300)
@@ -47,7 +47,7 @@ class Todo(QMainWindow):
         self._create_connections()
         self._json_file = "tasks.json"
 
-    def _create_widgets(self):
+    def _create_widgets(self) -> None:
         """ creates required widgets for app"""
         # NEW TASK BUTTON
         self._new_task_button = QPushButton("New Task")
@@ -63,7 +63,7 @@ class Todo(QMainWindow):
         self.statusBar().setObjectName("status-bar")
         self.statusBar().showMessage("Ready.", 5000)
 
-    def _create_layouts(self):
+    def _create_layouts(self) -> QVBoxLayout:
         """
         Creates main window layouts
         returns: the main layout populated.
@@ -99,7 +99,7 @@ class Todo(QMainWindow):
 
         return _main_layout
 
-    def _create_connections(self):
+    def _create_connections(self) -> None:
         """ Creates the required connections between widgets"""
         self._new_task_button.clicked.connect(self._create_new_task)
 
@@ -110,7 +110,7 @@ class Todo(QMainWindow):
         self.close_act.triggered.connect(self.close)
         self.about_act.triggered.connect(self.show_about_dialog)
 
-    def _create_new_task(self):
+    def _create_new_task(self) -> None:
         """ Adds a new Task to the main window scrollable area."""
         _new_task = Task()
         _new_task.label = f"Task {_new_task.id}"
@@ -122,7 +122,8 @@ class Todo(QMainWindow):
 
         self._create_task_children_connections(_new_task)
 
-    def _create_task_children_connections(self, new_task):
+    def _create_task_children_connections(self, new_task: Task):
+        """ Creates the connections for the task children widget."""
         # Task Delete button
         new_task_del_button = new_task.findChild(QPushButton, "delete-task")
         new_task_del_button.clicked.connect(self._delete_task)
@@ -131,7 +132,7 @@ class Todo(QMainWindow):
         new_task_done_check = new_task.findChild(QCheckBox, "task-done")
         new_task_done_check.clicked.connect(self._task_is_done)
 
-    def _delete_task(self):
+    def _delete_task(self) -> None:
         """
         Deletes task from widget after checking if its marked as done.
         Otherwise, prompts user to verify he wants the task deleted.
@@ -155,7 +156,7 @@ class Todo(QMainWindow):
                 self._tasks = [task for task in self._tasks if not task.unique_id == task_to_delete.unique_id]
                 self.statusBar().showMessage(f"{task_to_delete.label} deleted!", 1500)
 
-    def _task_is_done(self, checked):
+    def _task_is_done(self, checked: bool):
         """
         Changes the Task color and LineEdit font based on the Checkbox state.
         """
@@ -169,7 +170,7 @@ class Todo(QMainWindow):
         else:
             self.undo_strikeout_task_label(task_line_edit, current_task_done)
 
-    def undo_strikeout_task_label(self, task_line_edit, current_task_done):
+    def undo_strikeout_task_label(self, task_line_edit: QLineEdit, current_task_done: Task):
         # Change task color to original
         current_task_done.setStyleSheet("Task {background-color: #238754;}")
         print(f"changed-color: {current_task_done} to green")
@@ -180,7 +181,7 @@ class Todo(QMainWindow):
         task_line_edit.setFont(font)
         task_line_edit.setReadOnly(False)
 
-    def strikeout_task_label(self, task_line_edit, current_task_done):
+    def strikeout_task_label(self, task_line_edit: QLineEdit, current_task_done: Task):
         # Change task color to done
         current_task_done.setStyleSheet("Task {background-color: #cc253f;}")
         print(f"changed-color: {current_task_done} to red")

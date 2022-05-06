@@ -2,8 +2,17 @@ from PySide2.QtWidgets import QFrame, QHBoxLayout, QPushButton, QCheckBox, QLine
 
 
 class Task(QFrame):
+    """
+    The Task class inherits QFrame as a container to be populated with other widgets
+    required for the UI display.
+    _line_edit: acts as a label displaying by default "Task + Task.id"
+    _check_box: toggles the Task state for done/undone.
+    _del_button: deletes the task widget
+    _id: class variable, incremented with each created instance.
+    """
     _id = 0
-    def __init__(self, label="Task", id=0, is_done=False):
+
+    def __init__(self, label="Task", is_done=False):
         QFrame.__init__(self)
         self.setObjectName(label)
         self._line_edit = QLineEdit(label, self)
@@ -37,10 +46,11 @@ class Task(QFrame):
         return f"[{self.__class__.__name__}@{hex(id(self))} | {self.label} | {self.id}]"
 
     def __eq__(self, other):
+        """ Checks equality per object basis."""
         return id(self) is id(other)
 
     @property
-    def label(self):
+    def label(self) -> str:
         return self._line_edit.text()
 
     @label.setter
@@ -48,11 +58,11 @@ class Task(QFrame):
         self._line_edit.setText(value)
 
     @property
-    def id(self):
+    def id(self) -> int:
         return self._task_id
 
     @property
-    def done(self):
+    def done(self) -> bool:
         return self._check_box.isChecked()
 
     @done.setter
