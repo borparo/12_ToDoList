@@ -20,7 +20,7 @@ MENUS = [
     "&Task",
     "&Project",
     "&Help"
-    ]
+]
 
 
 class Todo(QMainWindow):
@@ -205,7 +205,7 @@ class Todo(QMainWindow):
             if menu == "&Task":
                 self.task_menu = self.menuBar().addMenu(menu)
                 self.new_act = QAction("&New")
-                self.delete_act = QAction("&Delete")
+                self.delete_act = QAction("&Delete Done")
                 self.open_act = QAction("&Open")
                 self.save_act = QAction("&Save")
                 self.close_act = QAction("&Close")
