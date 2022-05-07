@@ -4,7 +4,6 @@ Author: Borja Panadero
 Year: 2021
 Version: 0.1
 ==============================
-TODO create random tasks ID
 TODO history system
 TODO Menus actions
 TODO Projects
@@ -136,25 +135,34 @@ class Todo(QMainWindow):
         """
         Deletes task from widget after checking if its marked as done.
         Otherwise, prompts user to verify he wants the task deleted.
+        Used by delete-task button and delete menu action.
         """
-        on_focus = QApplication.focusWidget()
-        task_to_delete = self.sender().parent()
-        print(f"deleting: {task_to_delete}")
-
-        done = task_to_delete.findChild(QCheckBox, "task-done")
-        if done.isChecked():
-            task_to_delete.setParent(None)
-            self._tasks = [task for task in self._tasks if not task.id == task_to_delete.id]
-            self.statusBar().showMessage(f"{task_to_delete.label} deleted!", 1500)
-        else:
-            del_msg = QMessageBox(QMessageBox.Warning, "Delete Tasks",
-                                  "This task isn't done yet. \nAre you sure you want to task_to_delete it?",
-                                  QMessageBox.Yes | QMessageBox.No)
-            answer = del_msg.exec_()
-            if answer == del_msg.Yes:
-                task_to_delete.setParent(None)
-                self._tasks = [task for task in self._tasks if not task.id == task_to_delete.id]
+        sender = self.sender()
+        # From button
+        if isinstance(sender, QPushButton):
+            task_to_delete = self.sender().parent()  # find the parent widget of the pressed button = task widget.
+            print(f"deleting: {task_to_delete}")
+            done = task_to_delete.findChild(QCheckBox, "task-done")
+            # if task is done delete widget and object from self._task list.
+            if done.isChecked():
+                task_to_delete.deleteLater()
+                self._tasks.remove(task_to_delete)
                 self.statusBar().showMessage(f"{task_to_delete.label} deleted!", 1500)
+            else:  # Prompt the user if he really wants to delete an uncompleted task.
+                del_msg = QMessageBox(QMessageBox.Warning, "Delete Tasks",
+                                      "This task isn't done yet. \nAre you sure you want to task_to_delete it?",
+                                      QMessageBox.Yes | QMessageBox.No)
+                answer = del_msg.exec_()
+                if answer == del_msg.Yes:
+                    task_to_delete.deleteLater()
+                    self._tasks.remove(task_to_delete)
+                    self.statusBar().showMessage(f"{task_to_delete.label} deleted!", 1500)
+        # deletes all done tasks. TODO: if None is done prompt info.
+        elif isinstance(sender, QAction):
+            for task in self._tasks:
+                if task.done:
+                    task.deleteLater()
+                    self._tasks.remove(task)
 
     def _task_is_done(self, checked: bool):
         """
@@ -201,15 +209,23 @@ class Todo(QMainWindow):
                 self.open_act = QAction("&Open")
                 self.save_act = QAction("&Save")
                 self.close_act = QAction("&Close")
+
                 self.task_menu.addAction(self.new_act)
                 self.task_menu.addAction(self.delete_act)
-                self.task_menu.addSection("File")
+
+                self.task_menu.addSeparator()
                 self.task_menu.addAction(self.open_act)
                 self.task_menu.addAction(self.save_act)
-                self.task_menu.addSection("Quit")
+                self.task_menu.addSeparator()
                 self.task_menu.addAction(self.close_act)
             elif menu == "&Project":
                 project_menu = self.menuBar().addMenu(menu)
+                project_menu.setToolTip("Not available yet.")
+
+                self._new_project = QAction("New Project")
+                self._new_project.setEnabled(False)
+
+                project_menu.addAction(self._new_project)
             elif menu == "&Help":
                 self.help_menu = self.menuBar().addMenu(menu)
                 self.about_act = QAction("&About")
